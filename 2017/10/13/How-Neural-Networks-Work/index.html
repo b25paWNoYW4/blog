@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="原文链接：https://chatbotslife.com/how-neural-networks-work-ff4c7ad371f7    作者：gk_ 神经网络是如何工作的 人工神经网络 Artificial neural networks (ANN)早已成为一个热门话题，聊天机器人也经常使用人工网络来进行文本识别。但老实说，除非你是一个神经科学家，使用大脑来类比神经网络不会让你懂得更多。软">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Neural Networks Work">
+<meta property="og:url" content="http://oniichan.net/2017/10/13/How-Neural-Networks-Work/index.html">
+<meta property="og:site_name" content="Oniichan">
+<meta property="og:description" content="原文链接：https://chatbotslife.com/how-neural-networks-work-ff4c7ad371f7    作者：gk_ 神经网络是如何工作的 人工神经网络 Artificial neural networks (ANN)早已成为一个热门话题，聊天机器人也经常使用人工网络来进行文本识别。但老实说，除非你是一个神经科学家，使用大脑来类比神经网络不会让你懂得更多。软">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*jdBlZ2jfNuyA-Wf65p5AFw.jpeg">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*CcQPggEbLgej32mVF2lalg.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*8SJcWjxz8j7YtY6K-DWxKw.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/600/1*sGo81thwUpgLrSOdr5SvtA.jpeg">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*1CEU_YPnHAws8NpDYY_ebw.jpeg">
+<meta property="og:updated_time" content="2019-02-25T03:36:57.560Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How Neural Networks Work">
+<meta name="twitter:description" content="原文链接：https://chatbotslife.com/how-neural-networks-work-ff4c7ad371f7    作者：gk_ 神经网络是如何工作的 人工神经网络 Artificial neural networks (ANN)早已成为一个热门话题，聊天机器人也经常使用人工网络来进行文本识别。但老实说，除非你是一个神经科学家，使用大脑来类比神经网络不会让你懂得更多。软">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/800/1*jdBlZ2jfNuyA-Wf65p5AFw.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://oniichan.net/2017/10/13/How-Neural-Networks-Work/">
+
+
+
+
+
+  <title>How Neural Networks Work | Oniichan</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Oniichan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://oniichan.net/2017/10/13/How-Neural-Networks-Work/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Pretty Dog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Oniichan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">How Neural Networks Work</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-13T17:15:06+00:00">
+                2017-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> 原文链接：<a href="https://chatbotslife.com/how-neural-networks-work-ff4c7ad371f7" target="_blank" rel="noopener">https://chatbotslife.com/how-neural-networks-work-ff4c7ad371f7</a>  </p>
+<p> 作者：<a href="https://chatbotslife.com/@gk_" target="_blank" rel="noopener">gk_</a></p>
+<h1 id="神经网络是如何工作的"><a href="#神经网络是如何工作的" class="headerlink" title="神经网络是如何工作的"></a>神经网络是如何工作的</h1><p> 人工神经网络 Artificial neural networks (ANN)早已成为一个热门话题，聊天机器人也经常使用人工网络来进行文本识别。但老实说，除非你是一个神经科学家，使用大脑来类比神经网络不会让你懂得更多。软件类似于动物大脑中的突触和神经元概念最近火了起来，但软件中的神经网络已经存在了数十年。</p>
+<p> 让我们用一个简单的比喻： 一个弦乐器。</p>
+<p> <img src="https://cdn-images-1.medium.com/max/800/1*jdBlZ2jfNuyA-Wf65p5AFw.jpeg" alt=""></p>
+<a id="more"></a>
+<h2 id="就像吉他调和弦"><a href="#就像吉他调和弦" class="headerlink" title="就像吉他调和弦"></a>就像吉他调和弦</h2><p> 人工神经网络就像一个数据集经过“调整”（tuned）过后的字符集合。就像吉他调和弦。<code></code>（不懂乐理就不翻了，下面是原文）`</p>
+<p> （<code>Imagine a guitar and the process of tuning its strings to achieve a specific chord. As each string is tightened, it becomes more “in tune” with a specific note, the weight of this tightening causes other strings to require adjustment. Iterating through the strings, each time reducing errors in pitch, and eventually you arrive at a reasonably tuned instrument.</code>）</p>
+<p> 想象一下，吉他的每根弦（突触）都连接着调音钉（神经元），调弦就像一个迭代的过程（训练数据）。每次调弦时，还要有微调（反向传播）以调整到合适的音调。最终乐器调弦完毕，用于演奏（预测），乐器将正确谐调（可接受的低错误率）。（不懂乐理，下面是原文）  </p>
+<p> <code>Imagine the weight of each string (synapse) connecting a series of tuning pegs (neurons) and an iterative process to achieve proper tuning (training data). In each iteration there is additional fine tuning (back-propagation) to adjust to the desired pitch. Eventually the instrument is tuned and when played (used for prediction) it will harmonize properly (have acceptably low error rates).</code></p>
+<p> <img src="https://cdn-images-1.medium.com/max/800/1*CcQPggEbLgej32mVF2lalg.png" alt="多层人工神经网络"></p>
+<p> 让我们在程序中制造一个“玩具”人工神经网络来进行学习。例子的源代码在<a href="https://github.com/ugik/notebooks/blob/master/Simple_Neural_Network.ipynb" target="_blank" rel="noopener">这里</a>,我们将使用Pyhton和iPythonBook。和往常一样，我们将使用“无黑匣子”的方法，以方便我们来理解工作原理。  </p>
+<p> 我们将提供一个非常小的训练数据集，三个二进制数的集合和一个输出：</p>
+<pre><code>input [ 0, 0, 1 ] output: 0
+input [ 1, 1, 1 ] output: 1
+input [ 1, 0, 1 ] output: 1
+input [ 0, 1, 0 ] output: 0
+</code></pre><p> 注意，（上面的）输出（output）看起来似乎与第一个值相关，这就是模式。 例如，我们不知道[1，1，0]的输出是什么，但训练数据的模式强烈地表明输出是1。</p>
+<blockquote>
+<p>“人类智慧的核心是对模式的敏感性” - 道格拉斯·霍夫斯塔特（Douglas Hofstadter）</p>
+</blockquote>
+<p> 我们将使用Numpy库（做一些数学计算）将训练数据转化为数组列表。</p>
+<pre><code>import numpy
+# The training set. We have 4 examples, each consisting of 3 input values and 1 output value.
+
+training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 0]])
+
+training_set_outputs = array([[0, 1, 1, 0]]).T
+</code></pre><p> 然后在一个类里面定义我们的神经网络函数，通过init方法初始化。</p>
+<pre><code>class NeuralNetwork():
+    def __init__(self):
+        # Seed the random number generator, so it generates the same numbers
+        # every time the program runs.
+        random.seed(1)
+
+        # We model a single neuron, with 3 input connections and 1 output connection.
+        # We assign random weights to a 3 x 1 matrix, with values in the range -1 to 1
+        # and mean 0.
+self.synaptic_weights = 2 * random.random((3, 1)) - 1
+</code></pre><p> 突触的权重开始为随机值，注意网络的维度：3x1，与我们的训练数据一致（如[0，1，0]）。</p>
+<pre><code>Random starting synaptic weights: 
+[[-0.16595599]
+ [ 0.44064899]
+ [-0.99977125]]
+</code></pre><p> 接着定义激励函数。</p>
+<pre><code># The Sigmoid function, which describes an S shaped curve.
+# We pass the weighted sum of the inputs through this function to
+# normalise them between 0 and 1.
+def __sigmoid(self, x):
+    return 1 / (1 + exp(-x))
+
+# S函数的导数（计算梯度下降）.
+# This is the gradient of the Sigmoid curve.
+# It indicates how confident we are about the existing weight.
+def __sigmoid_derivative(self, x):
+    return x * (1 - x)
+</code></pre><p> 我们需要一种将结果规范化至某个范围内的方法，这里是0到1之间。</p>
+<p> <img src="https://cdn-images-1.medium.com/max/800/1*8SJcWjxz8j7YtY6K-DWxKw.png" alt="Sigmoid函数"></p>
+<p> 梯度（Sigmoid函数的导数）告诉我们曲线上任意一点的斜率，这有助于了解“离”（错误）“调和”有多“远”。<br> 想象有这样一个吉他调谐器，它能详细告诉我们有多“不和弦”。</p>
+<p> <img src="https://cdn-images-1.medium.com/max/600/1*sGo81thwUpgLrSOdr5SvtA.jpeg" alt=""></p>
+<p> 现在我们准备训练（调弦）我们的网络。</p>
+<pre><code># We train the neural network through a process of trial and error.
+    # Adjusting the synaptic weights each time.
+    def train(self, training_set_inputs, training_set_outputs, number_of_training_iterations):
+        for iteration in iter(range(number_of_training_iterations)):
+            # Pass the training set through our neural network (a single neuron).
+            output = self.think(training_set_inputs)
+
+            # Calculate the error (The difference between the desired output
+            # and the predicted output).
+            error = training_set_outputs - output
+
+            # Multiply the error by the input and again by the gradient of the Sigmoid curve.
+            # This means less confident weights are adjusted more.
+            # This means inputs, which are zero, do not cause changes to the weights.
+            adjustment = dot(training_set_inputs.T, error * self.__sigmoid_derivative(output))
+
+            # Adjust the weights.
+            self.synaptic_weights += adjustment
+            if (iteration % 1000 == 0):
+                print (&quot;error after %s iterations: %s&quot; % (iteration, str(numpy.mean(numpy.abs(error))))) 
+</code></pre><p> 上面代码中（只有6行）的是矩阵乘法，中学有学。<br> 我们可以看到每次1000次迭代后，错误率（音准程度）稳步下降。 在总共10,000次迭代之后，每次调整突触权重时，我们都能获得足够低的错误率。  </p>
+<pre><code>error after 1000 iterations: 0.0353771814512
+error after 2000 iterations: 0.024323319584
+error after 3000 iterations: 0.0196075022358
+error after 4000 iterations: 0.016850233908
+error after 5000 iterations: 0.014991814044
+error after 6000 iterations: 0.0136320935305
+error after 7000 iterations: 0.01258242301
+error after 8000 iterations: 0.0117408289409
+error after 9000 iterations: 0.0110467781322 
+</code></pre><p> 注意，网络过于紧密（过拟合）将不会有任何作用，就像一个太过敏感的乐器，会在演奏时走调。 合适的迭代次数通常与训练数据的维度有关。</p>
+<blockquote>
+<p>“我们考虑得太多而感知得太少.” 查理·卓别林(Charlie Chaplin)</p>
+</blockquote>
+<p> 下一部分是我的最爱：一行用来“思考”的代码。</p>
+<p> <strong>sigmoid( dot ( inputs, synaptic_weights))</strong></p>
+<pre><code># The neural network &apos;thinks&apos;
+    def think(self, inputs):
+        # Pass inputs through our neural network (our single neuron).
+return self.__sigmoid(dot(inputs, self.synaptic_weights))
+</code></pre><p> 输入和权重的点积（矩阵乘法）的归一化值。 由此得到结果：神经网络能“思考”了（更精确地说是能“预测”了）。</p>
+<p> <strong>等等，这是不是…</strong></p>
+<p> 那这是不是“人工智能”呢？</p>
+<p> 我们可以看得到0和1的数据流。这是真的。<br> 现在只需要编辑代码的main部分，然后运行。</p>
+<pre><code>if __name__ == &quot;__main__&quot;:
+
+    #Intialise a single neuron neural network.
+    neural_network = NeuralNetwork()
+
+    print (&quot;Random starting synaptic weights: &quot;)
+    print (neural_network.synaptic_weights)
+
+    # Train the neural network using a training set.
+    # Do it 10,000 times and make small adjustments each time.
+    neural_network.train(training_set_inputs, training_set_outputs, 10000)
+
+    print (&quot;New synaptic weights after training: &quot;)
+    print (neural_network.synaptic_weights)
+
+    # Test the neural network with a new pattern
+    test = [1, 0, 0]
+    print (&quot;Considering new situation %s -&gt; ?: &quot; % test )
+    print (neural_network.think(array(test)))
+</code></pre><p> 输出：</p>
+<pre><code>Random starting synaptic weights: 
+[[-0.16595599]
+ [ 0.44064899]
+ [-0.99977125]]
+error after 0 iterations: 0.578374046722
+error after 1000 iterations: 0.0353771814512
+error after 2000 iterations: 0.024323319584
+error after 3000 iterations: 0.0196075022358
+error after 4000 iterations: 0.016850233908
+error after 5000 iterations: 0.014991814044
+error after 6000 iterations: 0.0136320935305
+error after 7000 iterations: 0.01258242301
+error after 8000 iterations: 0.0117408289409
+error after 9000 iterations: 0.0110467781322
+New synaptic weights after training: 
+[[ 12.79547496]
+ [ -4.2162058 ]
+ [ -4.21608782]]
+Considering new situation [1, 0, 0] -&gt; ?: 
+[ 0.99999723]
+</code></pre><h2 id="发生了什么"><a href="#发生了什么" class="headerlink" title="发生了什么"></a>发生了什么</h2><p> 我们从4个训练数据开始：  </p>
+<p> input [ 0, 0, 1 ] output: 0</p>
+<p> input [ 1, 1, 1 ] output: 1</p>
+<p> input [ 1, 0, 1 ] output: 1</p>
+<p> input [ 0, 1, 0 ] output: 0</p>
+<p> 然后然神经网络预测[1,0,0]的输出，它给出了0.99————有效输出1，正确。</p>
+<p> 再让我们给网络一个输出不确定的input：</p>
+<pre><code>Considering new situation [0, 0, 0] -&gt; ?: 
+[ 0.5]
+</code></pre><p> 在这里，它“认为”输出是0.5，虽然不是0，但已经接近了。我们需要更多的训练数据以及更多的迭代（训练）次数。</p>
+<p> 厉害的是，是软件自行计算得到有用的模式，而不是人工为模式编写“规则”。我们可以轻松的编写以下的代码：</p>
+<pre><code># a new pattern applied to code
+test = [0, 0, 0]
+if test[0] == 1:
+    print ([1])
+else:
+    print ([0])
+</code></pre><p> 人工编写规则的前提是我们可以提前理解了模式的“规则”。但在实际中这通常是不现实的。</p>
+<h2 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h2><p> 在具有大量数据的真实分类器中，网络的维度更为显著。想象一下，一个500*7500的乘法矩阵，需要超过10万次以上的迭代次数，以及多层的神经元需要“调谐”。这就是所谓的“深度学习”。深度与网络的层数有关。</p>
+<p> 试一下这个例子中的代码。注意底部的输出显示了每个矩阵与每次迭代后的结果。</p>
+<p> <img src="https://cdn-images-1.medium.com/max/800/1*1CEU_YPnHAws8NpDYY_ebw.jpeg" alt="a 12-string harp guitar"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/25/Welcome_file/" rel="next" title="嗨，久等了。快点准备旅行吧。">
+                <i class="fa fa-chevron-left"></i> 嗨，久等了。快点准备旅行吧。
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/16/Deep-Learning-in-7-lines-of-code/" rel="prev" title="Deep Learning in 7 lines of code 个人翻译">
+                Deep Learning in 7 lines of code 个人翻译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Pretty Dog</p>
+              <p class="site-description motion-element" itemprop="description">A Loser...</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#神经网络是如何工作的"><span class="nav-number">1.</span> <span class="nav-text">神经网络是如何工作的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#就像吉他调和弦"><span class="nav-number">1.1.</span> <span class="nav-text">就像吉他调和弦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发生了什么"><span class="nav-number">1.2.</span> <span class="nav-text">发生了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习"><span class="nav-number">1.3.</span> <span class="nav-text">深度学习</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Pretty Dog</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
